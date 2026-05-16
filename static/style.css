@@ -31,7 +31,7 @@
     --color-input-bg: #1a0080;
     --color-box-shadow: #00ffaa;
     --color-modal-shadow: #00ffaa;
-    --color-modal-overlay: rgba(0, 0, 80, 0.85);
+    --color-modal-overlay: rgba(0, 0, 0, 0.5);
 }
 
 body {

@@ -56,9 +56,10 @@
 
               if (res.ok) {
                 const msg = await res.json();
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td><strong>${msg.display_name}</strong></td><td>${msg.content}</td><td>${msg.timestamp}</td>`;
-                tbody.appendChild(tr);
+                const new_message = document.createElement('tr');
+
+                new_message.innerHTML = `<td><strong>${msg.display_name}</strong></td><td>${msg.content}</td><td>${msg.timestamp}</td>`;
+                tbody.appendChild(new_message);
                 input.value = '';
                 scroll.scrollTop = scroll.scrollHeight;
               }

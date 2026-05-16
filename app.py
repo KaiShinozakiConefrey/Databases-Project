@@ -664,7 +664,7 @@ def reject_channel_invitation():
     conn = get_db()
     cur = conn.cursor()
 
-    # Update the invitation status to accepted
+    # Update the invitation status to declined
     cur.execute('UPDATE Channel_Invitation '
                 'SET status = %s '
                 'WHERE invitee_id = %s AND c_id = %s AND inviter_id = %s', 
