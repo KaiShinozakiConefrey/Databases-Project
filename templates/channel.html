@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>Snickr</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>SNICKR</h1>
+
+    <div style="max-width: 1100px; margin: 0 auto; padding: 0 24px;">
+      <a href="{{ url_for('workspace', w_id=request.args.get('w_id')) }}">Return to Workspace</a>
+      <h2 style="text-align: center;">{{ workspace }} - #{{ channel }}</h2>
+    </div>
+
+    <div class="workspace-layout" style="padding: 0 12px;">
+
+      <div>
+        <div class="box" style="max-width: none; margin-bottom: 24px;">
+          <h2>Messages</h2>
+          <div id="messages-scroll" style="max-height: 400px; overflow-y: auto; border: 2px inset var(--color-border);">
+            <table>
+              <tbody>
+                {% for message in messages %}
+                <tr>
+                  <td><strong>{{ message[4] if message[4] != "" else message[3] }}</strong></td>
+                  <td>{{ message[1] }}</td>
+                  <td>{{ message[2] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <form id="message-form" action="/post_message" method="post" style="margin-top: 16px; display: flex; gap: 8px;">
+            <input type="hidden" name="w_id" value="{{ request.args.get('w_id') }}">
+            <input type="hidden" name="c_id" value="{{ request.args.get('c_id') }}">
+            <input id="message-input" type="text" name="content" placeholder="Enter your message..." style="flex-grow: 1; padding: 6px; border: 2px inset var(--color-border); background-color: var(--color-input-bg); color: var(--color-text); font-family: var(--font);">
+            <button class="btn" type="submit">Send</button>
+          </form>
+          <script>
+            const form = document.getElementById('message-form');
+            const input = document.getElementById('message-input');
+            const tbody = document.querySelector('#messages-scroll table tbody');
+            const scroll = document.getElementById('messages-scroll');
+
+            form.addEventListener('submit', async (e) => {
+              e.preventDefault();
+              const content = input.value.trim();
+              if (!content) return;
+
+              const data = new FormData(form);
+              const res = await fetch('/post_message', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'fetch' },
+                body: data
+              });
+
+              if (res.ok) {
+                const msg = await res.json();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><strong>${msg.display_name}</strong></td><td>${msg.content}</td><td>${msg.timestamp}</td>`;
+                tbody.appendChild(tr);
+                input.value = '';
+                scroll.scrollTop = scroll.scrollHeight;
+              }
+            });
+          </script>
+        </div>
+      </div>
+
+      <div class="box" style="max-width: none; align-self: start;">
+        <h2>Members</h2>
+        <ul class="members-list">
+          {% for member in members %}
+          <li>
+            <span>{{ member[1] }}{% if member[0] == owner %} (Owner){% endif %}</span>
+          </li>
+          {% endfor %}
+        </ul>
+
+        {% if owner == session.get('a_id') and at_capacity == False %}
+        <button class="btn" onclick="document.getElementById('invite_member').style.display='flex'" style="margin-top: 16px;">
+          Invite a Member
+        </button>
+        {% for message in get_flashed_messages(category_filter=["error"]) %}
+          <p style="color: #ff8080;">{{ message }}</p>
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["success"]) %}
+          <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+    </div>
+
+    <div id="invite_member" class="modal-overlay">
+      <div class="modal-box">
+        <h3>Invite someone to the channel</h3>
+        <form action="/invite_to_channel" method="POST">
+          <input type="email" name="email" placeholder="Email">
+          <button class="btn" type="submit">Invite</button>
+        </form>
+        <button class="btn btn-secondary" onclick="document.getElementById('invite_member').style.display='none'">Cancel</button>
+      </div>
+    </div>
+
+  </body>
+</html>

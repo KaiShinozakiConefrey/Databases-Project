@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Snickr</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>SNICKR</h1>
+    {% if user != "" %}
+    <div class="box">
+      <a href="{{ url_for('logout') }}">Log out</a>
+      {% if invitations %}
+      <h2>You have invitations!</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Workspace</th>
+            <th>Description</th>
+            <th>Invited By</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invitation in invitations %}
+          <tr>
+            <td>{{ invitation[1] }}</td>
+            <td>{{ invitation[2] }}</td>
+            <td>{{ invitation[3] }}</td>
+            <td>{{ invitation[4] }}</td>
+            <td>
+              <form action="/accept_workspace_invitation" method="GET">
+                <input type="hidden" name="w_id" value="{{ invitation[0] }}">
+                <input type="hidden" name="inviter_id" value="{{ invitation[5] }}">
+                <input type="submit" value="Accept Invitation">
+              </form>
+              <form action="/reject_workspace_invitation" method="GET">
+                <input type="hidden" name="w_id" value="{{ invitation[0] }}">
+                <input type="hidden" name="inviter_id" value="{{ invitation[5] }}">
+                <input type="submit" value="Reject Invitation">
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+    <div class="box">
+      <h2>{{ user }}'s Workspaces</h2>
+      <div class="workspace-grid">
+        {% for workspace in workspaces %}
+        <div class="workspace-card">
+          <h3>{{ workspace[1] }}</h3>
+          <p>{{ workspace[2] }}</p>
+          <form action="/workspace" method="GET">
+            <input type="hidden" name="w_id" value="{{ workspace[0] }}">
+            <button type="submit">Go to Workspace</button>
+          </form>
+        </div>
+        {% endfor %}
+        <div class="workspace-card">
+          <button class="btn" onclick="document.getElementById('create_workspace_modal').style.display='flex'">Create New Workspace</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="create_workspace_modal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>Create New Workspace</h3>
+        <form action="/create_workspace" method="POST">
+          <input type="text" name="workspace_name" placeholder="Workspace name">
+          <input type="text" name="description" placeholder="Description">
+          <button class="btn" type="submit">Create</button>
+        </form>
+        <button class="btn btn-secondary" onclick="document.getElementById('create_workspace_modal').style.display='none'">Cancel</button>
+      </div>
+    </div>
+
+    {% else %}
+    <div class="box">
+    <p>Please create an account or log in</p>
+    <a href="{{ url_for('auth') }}">Create Account / Login</a>
+    </div>
+    {% endif %}
+
+  </body>
+</html>

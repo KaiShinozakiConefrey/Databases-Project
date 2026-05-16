@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <title>Snickr</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>SNICKR</h1>
+
+    <div class="box" style="padding: 0 12px;">
+      <h2 style="text-align: center;">{{ workspace }}</h2>
+      <a href="{{ url_for('index') }}">Return to Workspace List</a>
+    </div>
+
+    <div class="workspace-layout" style="padding: 0 12px;">
+      <div>
+        {% if invitations %}
+        <div class="box" style="max-width: none; margin-bottom: 24px;">
+          <h2>You have invitations!</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Description</th>
+                <th>Invited By</th>
+                <th>Timestamp</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for invitations in invitations %}
+              <tr>
+                <td>{{ invitations[1] }}</td>
+                <td>{{ invitations[2] }}</td>
+                <td>{{ invitations[3] }}</td>
+                <td>{{ invitations[4] }}</td>
+                <td>
+                  <form action="/accept_channel_invitation" method="GET">
+                    <input type="hidden" name="w_id" value="{{ w_id }}">
+                    <input type="hidden" name="c_id" value="{{ invitations[0] }}">
+                    <input type="hidden" name="inviter_id" value="{{ invitations[5] }}">
+                    <input type="hidden" name="invitee_id" value="{{ session.get('a_id') }}">
+                    <button class="btn" type="submit">Accept</button>
+                  </form>
+                  <form action="/reject_channel_invitation" method="GET">
+                    <input type="hidden" name="w_id" value="{{ w_id }}">
+                    <input type="hidden" name="c_id" value="{{ invitations[0] }}">
+                    <input type="hidden" name="inviter_id" value="{{ invitations[5] }}">
+                    <input type="hidden" name="invitee_id" value="{{ session.get('a_id') }}">
+                    <button class="btn btn-secondary" type="submit">Reject</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+        <div class="box" style="max-width: none; margin-bottom: 24px;">
+          <h2>Your Channels</h2>
+          <div class="workspace-grid">
+            {% for channel in channels %}
+            <div class="workspace-card">
+              <h3>{{ channel[1] }}</h3>
+              <p>{{ channel[2] }}</p>
+              <form action="/channel" method="GET">
+                <input type="hidden" name="w_id" value="{{ w_id }}">
+                <input type="hidden" name="c_id" value="{{ channel[0] }}">
+                <button class="btn" type="submit">Go to Channel</button>
+              </form>
+            </div>
+            {% endfor %}
+          </div>
+          <button class="btn" onclick="document.getElementById('modal').style.display='flex'" style="margin-top: 16px;">
+            Create New Channel
+          </button>
+        </div>
+
+        {% if public_channels %}
+        <div class="box" style="max-width: none;">
+          <h2>Public Channels</h2>
+          <div class="workspace-grid">
+            {% for channel in public_channels %}
+            <div class="workspace-card">
+              <h3>{{ channel[1] }}</h3>
+              <p>{{ channel[2] }}</p>
+              <form action="/join_channel" method="GET">
+                <input type="hidden" name="c_id" value="{{ channel[0] }}">
+                <button class="btn" type="submit">Join Channel</button>
+              </form>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        {% if private_channels %}
+        <div class="box" style="max-width: none;">
+          <h2>Private Channels</h2>
+          <div class="workspace-grid">
+            {% for channel in private_channels %}
+            <div class="workspace-card">
+              <h3>{{ channel[1] }}</h3>
+              <p>{{ channel[2] }}</p>
+              <form action="/join_channel" method="GET">
+                <input type="hidden" name="c_id" value="{{ channel[0] }}">
+                <button class="btn" type="submit">Join Channel</button>
+              </form>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+
+      <div class="box" style="max-width: none; align-self: start;">
+        <h2>Workspace Members</h2>
+        <ul class="members-list">
+          {% for member in members %}
+          <li>
+            <span>{{ member[2] }} ({{ member[1] }})</span>
+            {% if role != 'member' and member[1] == 'member' %}
+            <form action="/make_co_admin" method="POST">
+              <input type="hidden" name="a_id" value="{{ member[0] }}">
+              <button class="btn" type="submit">Make Co-Admin</button>
+            </form>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% if role != 'member' %}
+        <button class="btn" onclick="document.getElementById('invite_member').style.display='flex'" style="margin-top: 16px;">
+          Invite a Member
+        </button>
+        {% for message in get_flashed_messages(category_filter=["error"]) %}
+          <p style="color: red;">{{ message }}</p>
+        {% endfor %}
+        {% for message in get_flashed_messages(category_filter=["success"]) %}
+          <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+      </div>
+
+    </div>
+
+    <div id="invite_member" class="modal-overlay">
+      <div class="modal-box">
+        <h3>Invite someone to the workspace</h3>
+        <form action="/invite_to_workspace" method="POST">
+          <input type="email" name="email" placeholder="Email">
+          <button class="btn" type="submit">Invite</button>
+        </form>
+        <button class="btn btn-secondary" onclick="document.getElementById('invite_member').style.display='none'">Cancel</button>
+      </div>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+      <div class="modal-box">
+        <h3>Create New Channel</h3>
+        <form action="/create_channel" method="POST">
+          <input type="text" name="channel_name" placeholder="Channel name">
+          <input type="text" name="channel_description" placeholder="Channel description">
+          <select name="type">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+            <option value="direct">Direct</option>
+          </select>
+          <button class="btn" type="submit">Create</button>
+        </form>
+        <button class="btn btn-secondary" onclick="document.getElementById('modal').style.display='none'">Cancel</button>
+      </div>
+    </div>
+
+  </body>
+</html>

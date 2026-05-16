@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Snickr</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <h1>SNICKR</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p style="text-align: center; color: #ff4466;">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 760px; margin: 32px auto;">
+      <form class="modal-box" action="/login" method="post">
+        <h2>Log In</h2>
+        <input type="text" name="email" placeholder="Email">
+        <input type="password" name="password" placeholder="Password">
+        <button type="submit" class="btn">Log In</button>
+      </form>
+      <form class="modal-box" action="/create_account" method="post">
+        <h2>Create an Account</h2>
+        <input type="text" name="email" placeholder="Email">
+        <input type="text" name="username" placeholder="Username">
+        <input type="text" name="nickname" placeholder="Nickname">
+        <input type="password" name="password" placeholder="Password">
+        <button type="submit" class="btn">Create Account</button>
+      </form>
+    </div>
+    <div style="text-align: center; margin-top: 12px;">
+      <a href="{{ url_for('index') }}">Return home</a>
+    </div>
+  </body>
+</html>

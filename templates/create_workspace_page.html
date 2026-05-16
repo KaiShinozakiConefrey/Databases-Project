@@ -1,0 +1,31 @@
+<style>
+    .centered {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: left;
+        
+        margin-bottom: 16px; 
+    }
+</style>
+
+<html>
+  <head>
+    <title>Snickr</title>
+  </head>
+  <body>
+    <h1>Snickr</h1>
+    <div class="centered">
+      <h2>Create a Workspace</h2>
+      <form action="/create_workspace" method="post">
+        <input type="text" name="workspace_name" placeholder="Workspace Name">
+        <br>
+        <input type="text" name="description" placeholder="Description">
+        <br>
+        <input type="submit" value="Create Workspace">
+      </form>
+    </div>
+    <a href="{{ url_for('index') }}">Return home</a>
+
+  </body>
+</html>

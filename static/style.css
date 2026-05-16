@@ -1,0 +1,228 @@
+:root {
+    --font: "Lucida Console", "Courier New", monospace;
+    --color-text: #00ffaa;
+    --color-text-dark: #00ffaa;
+    --color-text-white: #ffffff;
+    --color-heading: #00ffaa;
+    --color-h1: #00ffaa;
+    --color-h3: #7766ff;
+    --color-card-heading: #00ffaa;
+    --color-link: #00ffcc;
+    --color-link-visited: #aa88ff;
+    --color-link-hover-text: #1a0080;
+    --color-link-hover-bg: #00ffaa;
+    --color-accent: #00ffaa;
+    --color-accent-hover: #33ffbb;
+    --color-accent-secondary-hover: #7766ff;
+    --color-shadow-1: #4422cc;
+    --color-shadow-2: #1a0080;
+    --color-primary: #1a0080;
+    --color-table-bg: #220099;
+    --color-table-header-text: #00ffaa;
+    --color-td-bg: #1a0080;
+    --color-td-alt-bg: #2211aa;
+    --color-box-bg: #1a0080;
+    --color-card-bg: #220099;
+    --color-card-border: #00ffaa;
+    --color-surface: #2211aa;
+    --color-border: #4433cc;
+    --color-btn-bg: #2211aa;
+    --color-btn-hover: #3322cc;
+    --color-input-bg: #1a0080;
+    --color-box-shadow: #00ffaa;
+    --color-modal-shadow: #00ffaa;
+    --color-modal-overlay: rgba(0, 0, 80, 0.85);
+}
+
+body {
+    background-image: url("/static/cloudy_sky.png");
+    background-repeat: repeat;
+    background-size: 1812px 1024px;
+    font-family: var(--font);
+    color: var(--color-text);
+}
+h1 {
+    text-align: center;
+    font-size: 3em;
+    color: var(--color-h1);
+    text-shadow: 3px 3px 0px var(--color-shadow-1), 6px 6px 0px var(--color-shadow-2);
+    margin-bottom: 16px;
+    margin-top: 32px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}
+h2 {
+    text-align: left;
+    margin-top: 0px;
+    color: var(--color-heading);
+    text-decoration: underline;
+}
+h3 {
+    color: var(--color-h3);
+}
+a {
+    color: var(--color-link);
+    text-decoration: underline;
+    font-weight: bold;
+}
+a:visited {
+    color: var(--color-link-visited);
+}
+a:hover {
+    color: var(--color-link-hover-text);
+    background-color: var(--color-link-hover-bg);
+}
+table {
+    border: 3px ridge var(--color-primary);
+    border-collapse: collapse;
+    width: 100%;
+    background-color: var(--color-table-bg);
+}
+th {
+    background-color: var(--color-primary);
+    color: var(--color-table-header-text);
+    border: 2px solid var(--color-text-white);
+    padding: 6px;
+    font-family: var(--font);
+}
+td {
+    border: 2px inset var(--color-border);
+    padding: 6px;
+    background-color: var(--color-td-bg);
+}
+tr:nth-child(even) td {
+    background-color: var(--color-td-alt-bg);
+}
+.centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: left;
+    margin-bottom: 16px;
+}
+.box {
+    background-color: var(--color-box-bg);
+    border: 4px ridge var(--color-accent);
+    border-radius: 0px;
+    padding: 24px;
+    max-width: 500px;
+    margin: 20px auto;
+    box-shadow: 6px 6px 0px var(--color-box-shadow);
+}
+.workspace-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+}
+.workspace-card {
+    background-color: var(--color-card-bg);
+    border: 3px outset var(--color-card-border);
+    border-radius: 0px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.workspace-card h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: var(--color-card-heading);
+    text-decoration: underline;
+}
+.workspace-card p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--color-text);
+    flex-grow: 1;
+}
+a {
+    padding: 4px 10px;
+    border: 3px outset var(--color-btn-bg);
+    border-radius: 0px;
+    background-color: var(--color-btn-bg);
+    color: var(--color-text-dark);
+    cursor: pointer;
+    font-size: 0.9em;
+    font-family: var(--font);
+}
+.workspace-card button:hover, .workspace-card a:hover {
+    border-style: inset;
+    background-color: var(--color-btn-hover);
+}
+.workspace-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 6px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+.members-list {
+    list-style: square;
+    padding: 0 0 0 16px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.members-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    background-color: var(--color-surface);
+    border: 2px inset var(--color-border);
+    color: var(--color-text);
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--color-modal-overlay);
+    justify-content: center;
+    align-items: center;
+}
+.modal-box {
+    background: var(--color-surface);
+    border: 4px outset var(--color-text-white);
+    padding: 24px;
+    border-radius: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 280px;
+    box-shadow: 4px 4px 0px var(--color-modal-shadow);
+}
+.modal-box input, .modal-box select {
+    padding: 4px;
+    border: 2px inset var(--color-border);
+    border-radius: 0px;
+    font-size: 0.95em;
+    font-family: var(--font);
+    background-color: var(--color-input-bg);
+    color: var(--color-text);
+}
+.btn {
+    padding: 4px 14px;
+    border: 3px outset var(--color-btn-bg);
+    border-radius: 0px;
+    background-color: var(--color-btn-bg);
+    color: var(--color-text-dark);
+    cursor: pointer;
+    font-size: 0.9em;
+    font-family: var(--font);
+}
+.btn:active {
+    border-style: inset;
+}
+.btn:hover {
+    background-color: var(--color-accent-hover);
+}
+.btn-secondary {
+    background-color: var(--color-btn-bg);
+    color: var(--color-text-dark);
+}
+.btn-secondary:hover {
+    background-color: var(--color-accent-secondary-hover);
+}
